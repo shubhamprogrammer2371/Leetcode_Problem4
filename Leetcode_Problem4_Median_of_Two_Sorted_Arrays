@@ -1,0 +1,73 @@
+int cmfnc(const void* a , const void* b)
+{
+    return *(int*)a - *(int*)b;
+}
+double findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Size) {
+    int* arr = malloc(2000*sizeof(int)) , size = 0;
+    for( int i = 0 ; i < nums1Size ; i++)
+        arr[size++] = nums1[i];
+    for( int i = 0 ; i < nums2Size ; i++)
+        arr[size++] = nums2[i];
+    qsort(arr,size,sizeof(int),cmfnc);
+    return (size&1) ? (double)arr[size/2] : ((double)(arr[size/2] + arr[(size/2)-1])/2);
+}
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+int cmfnc(const void* a , const void* b)
+{
+    return *(int*)a - *(int*)b;
+}
+double findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Size) {
+    int* arr = malloc((nums1Size+nums2Size)*sizeof(int)) , size = 0 , num2size = 0;
+    for (int i = 0 ; i<nums1Size+nums2Size ; i++)
+        arr[size++] = (i < nums1Size) ? nums1[i] : nums2[num2size++];
+    qsort(arr,size,sizeof(int),cmfnc);
+    return (size&1) ? (double)arr[size/2] : ((double)(arr[size/2] + arr[(size/2)-1])/2);
+}
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+double findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Size){
+    int temp[nums1Size+nums2Size] , x = 0;
+    for (int i = 0 ; i<nums1Size+nums2Size ; i++)
+        temp[i] = (i < nums1Size) ? nums1[i] : nums2[x++];
+    for(int i=0;i<nums1Size+nums2Size;i++)
+    {
+        for(int j=i+1;j<nums1Size+nums2Size;j++)
+        {
+            if(temp[i]>temp[j])
+            {
+                int t= temp[i];
+                temp[i]=temp[j];
+                temp[j]=t;
+            }
+        }
+    }
+    return !((nums1Size+nums2Size)%2) ? (temp[((nums1Size+nums2Size) /2)]+temp[((nums1Size+nums2Size) /2)-1])/2.00 : temp[(nums1Size+nums2Size)/2];
+}
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+double findMedianSortedArrays(int* nums1, int n, int* nums2, int m){
+    int i = 0 , j = 0 , k = 0 , max = m + n , *merged_array , median_pos = max / 2;
+    merged_array = malloc(sizeof(int) * max); 
+    while (i < n || j < m && k <= median_pos) 
+    {
+        if (i == n) 
+            merged_array[k++] = nums2[j++];
+        else if (j == m) 
+            merged_array[k++] = nums1[i++];
+        else if (nums1[i] < nums2[j]) 
+            merged_array[k++] = nums1[i++];
+        else 
+            merged_array[k++] = nums2[j++];
+    }
+    return (max % 2) ? (double) merged_array[median_pos] : (double) (merged_array[median_pos - 1] + merged_array[median_pos]) / 2;
+}
